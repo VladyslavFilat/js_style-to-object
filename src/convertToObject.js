@@ -6,23 +6,22 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  let result = sourceString.split(';');
+  return sourceString
+    .split(';')
+    .filter((str) => str.trim().length > 0)
+    .reduce((acc, str) => {
+      const parts = str.split(':');
 
-  result = result.map((item) => item.split(':'));
+      if (parts.length !== 2) {
+        return acc;
+      }
 
-  const newArray = result.filter((item) => item.length === 2);
-  const resultArray = {};
+      const [key, value] = parts;
 
-  for (const elem of newArray) {
-    const key = elem[0].trim();
-    const value = elem[1].trim();
+      acc[key.trim()] = value.trim();
 
-    if (elem[0] !== '' && elem[1] !== '') {
-      resultArray[key] = value;
-    }
-  }
-
-  return resultArray;
+      return acc;
+    }, {});
 }
 
 module.exports = convertToObject;
